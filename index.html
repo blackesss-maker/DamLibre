@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#0033A0">
+<title>DAM Libre</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Source+Sans+3:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app" class="t-bleu">
+  <div class="bg"></div><div class="tint"></div><div class="shade"></div><div class="sweep"></div><div class="glow"></div><div id="confetti"></div>
+  <header>
+    <!-- Appui long (1,5 s) sur le logo = recommencer le jeu -->
+    <button id="logo" class="logo" aria-label="Logo"><svg role="img" aria-label="Logo détourné : l’Assurance Liberté, Rhône" width="104" height="47" viewBox="0 6 285 128" style="flex:none;margin-left:auto"><defs><path id="arc" d="M4 56Q46 2 146 16"/></defs><path d="M6 60H92" stroke="#8DB83B" stroke-width="1.5"/><path d="M6 70H92" stroke="#8DB83B" stroke-width="1.5"/><path d="M6 80H92" stroke="#8DB83B" stroke-width="1.5"/><path d="M6 90H92" stroke="#8DB83B" stroke-width="1.5"/><path d="M6 100H92" stroke="#8DB83B" stroke-width="1.5"/><path d="M6 110H92" stroke="#8DB83B" stroke-width="1.5"/><g fill="none" stroke="#1E6BB8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 78V94M11 108L16 94L22 108M16 82L28 76"/><path d="M48 68L40 92L22 110L8 112M40 92L56 108M47 72L28 80M47 72L70 70"/><path d="M54 36L34 46L18 42"/><path d="M82 70L80 96L76 112M80 96L86 112M82 74L68 72"/></g><g fill="#1E6BB8"><circle cx="16" cy="70" r="6"/><circle cx="48" cy="58" r="7.5"/><circle cx="60" cy="30" r="6.5"/><circle cx="82" cy="61" r="6.5"/></g><text font-family="Source Sans 3,sans-serif" font-size="8" font-weight="600" letter-spacing=".5" fill="#1E6BB8"><textPath href="#arc">EXFILTRATION SOCIALE</textPath></text><g font-family="Source Sans 3,sans-serif" font-weight="700"><text x="100" y="62" font-size="29" textLength="172" lengthAdjust="spacingAndGlyphs" fill="#1E6BB8">l’Assurance</text><text x="100" y="100" font-size="38" textLength="146" lengthAdjust="spacingAndGlyphs" fill="#1E6BB8">Liberté</text><text x="102" y="126" font-size="17" letter-spacing="2" fill="#5F8E13">RHÔNE</text></g></svg></button>
+    <div class="cpt" data-f="compteur"></div>
+  </header>
+  <div id="dots" class="dots" hidden></div>
+  <main>
+
+    <!-- ÉCRAN 1 · ACCUEIL (étape 0) : champs data-f = titre, message ; bouton #btn-start -->
+    <section class="screen" id="s-intro" hidden>
+      <div class="disc"><small>DAM</small><b>69</b></div>
+      <h1 data-f="titre"></h1>
+      <div class="glass"><p data-f="message"></p><p class="cons" data-f="consigne"></p></div>
+      <div class="actions"><button class="btn" id="btn-start">LANCER LE PROTOCOLE</button></div>
+    </section>
+
+    <!-- ÉCRAN 2 · MISSION À CODE (étapes 1, 2, 4 à 9) : champs = numero, phase, titre, message, consigne, indice ; #code, #btn-valider, #btn-indice -->
+    <section class="screen" id="s-mission" hidden>
+      <div class="disc"><small>MISSION</small><b data-f="numero"></b></div>
+      <span class="pill" data-f="phase"></span>
+      <h1 data-f="titre"></h1>
+      <div class="glass"><p data-f="message"></p><p class="cons" data-f="consigne"></p></div>
+      <div class="actions">
+        <p class="hint" id="indice" data-f="indice" hidden></p>
+        <input id="code" class="field" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ENTRE LE CODE" aria-label="Code">
+        <button class="btn" id="btn-valider">VALIDER</button>
+        <button class="link" id="btn-indice">Besoin d’un indice ?</button>
+      </div>
+    </section>
+
+    <!-- ÉCRAN 3 · RUBANS À DÉPLACER (étape 3) : champs = numero, phase, titre, message, consigne ; #slots, #tray, #rcode, #btn-valider-rubans, #btn-recommencer -->
+    <section class="screen" id="s-rubans" hidden>
+      <div class="disc"><small>MISSION</small><b data-f="numero"></b></div>
+      <h1 data-f="titre"></h1>
+      <div class="glass"><p data-f="message"></p></div>
+      <div class="slots" id="slots"></div>
+      <div class="codeview" id="rcode"></div>
+      <div class="tray" id="tray"></div>
+      <div class="actions">
+        <button class="btn" id="btn-valider-rubans">VALIDER</button>
+        <button class="link" id="btn-recommencer">Recommencer</button>
+      </div>
+    </section>
+
+    <!-- ÉCRAN 4 · RÉUSSITE : champ = reussite ; vidéo optionnelle #media ; #btn-suivant -->
+    <section class="screen" id="s-reussite" hidden>
+      <div class="disc ok"><b>✓</b></div>
+      <h1>CODE ACCEPTÉ</h1>
+      <div class="glass"><p data-f="reussite"></p></div>
+      <video id="media" controls playsinline hidden style="width:100%;border-radius:16px"></video>
+      <div class="actions"><button class="btn" id="btn-suivant">ÉTAPE SUIVANTE</button></div>
+    </section>
+
+    <!-- ÉCRAN 5 · ERREUR : champ = erreur ; #btn-reessayer -->
+    <section class="screen" id="s-erreur" hidden>
+      <div class="disc bad"><b>404</b></div>
+      <h1>ERREUR 404</h1>
+      <div class="glass"><p data-f="erreur"></p></div>
+      <div class="actions"><button class="btn" id="btn-reessayer">RÉESSAYER</button></div>
+    </section>
+
+    <!-- ÉCRAN 6 · FINAL (étape 10) : champs = titre, message ; #statut, #btn-scan, scanner caméra -->
+    <section class="screen" id="s-final" hidden>
+      <div class="disc"><small>MISSION</small><b>10</b></div>
+      <span class="pill">TERMINUS</span>
+      <h1 data-f="titre"></h1>
+      <div class="glass"><p data-f="message"></p></div>
+      <div class="actions">
+        <div class="statut" id="statut" hidden>STATUT : RETRAITÉE LIBRE !</div>
+        <a class="btn" id="lien" href="#" target="_blank" rel="noopener" hidden>OUVRIR LE MESSAGE DE L’ÉQUIPE</a>
+        <button class="btn" id="btn-scan">SCANNER LE QR CODE</button>
+      </div>
+    </section>
+
+  </main>
+  <div id="scanner" hidden>
+    <video id="cam" playsinline muted></video><canvas id="cv" hidden></canvas>
+    <button id="btn-manuel" hidden>Pas de caméra ? Saisir le mot du QR code</button>
+    <button id="btn-fermer">Fermer</button>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<script src="etapes.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
